@@ -54,17 +54,40 @@ const MainJS_URL = "https://www.deltamath.com/app/" + website.match(/main\..{0,4
 
 ### Fetch DeltaMath code
 With the DeltaMath main.js URL now known, we can fetch the file.
-(Content script on DeltaMath domains).
 ```js
 const OriginalMainJS = await (await fetch(MainJS_URL)).text();
 ```
 
 ### Apply Patches 
 Time for the fun part- modifying the DeltaMath script!
-We're going to 
+We're going to run String and RegEx replacements through a mutable string, then make a final one with the result.
 ```ts
-  /** DeltaMath code that we modify */
-  let delta : string = code;
-  /** Array of patches we must apply to the DeltaMath code */
-  let patches : [string | RegExp, string][] = [];
+let mutable : string = OriginalMainJS; // Mutable string that we'll modify
+let patches : [string | RegExp, string][] = []; // Array of replacements: [from, to]
+patches.push(["the timer", "the TIMER"]); // Replace all 'the timer' with 'the TIMER'
+patches.push([/alertDialouge\(..{0,100}\)/, "alert('Nope')"]) // Replace alertDialouges with 'Nope' alerts
+patches.forEach((from, to) => mutable.replace(from, to); ); // Run replacements
+const PatchedFile = `window._.allowEscapingTimed = false;\n` + mutable; // Final patched file
 ```
+
+### Inject File
+Let's finally load in the patched main.js file.
+The document onreset dispatchEvent is a great way to inject JS from a string into the webpage.
+```js
+document.documentElement.setAttribute("onreset", PatchedFile);
+document.documentElement.dispatchEvent(new CustomEvent("reset"));
+document.documentElement.removeAttribute("onreset");
+```
+
+### Load GUI
+Now we've got the modified main.js in the page, we can use mods.
+However, the main.js doesn't come with any user-friendly way to use the mods.
+Let's load in [dGUI](https://github.com/DxltaMath/dGUI).
+```js
+const url = "https://raw.githubusercontent.com/DxltaMath/dGUI/master/dist/bundle.js";
+const dGUI = await (await fetch(url)).text();
+inject(dGUI) // then do the same thing that we did with PatchedFile in the Inject File section
+```
+
+### Done!
+Horray, we've loaded modifiable DeltaMath and a mod menu!
