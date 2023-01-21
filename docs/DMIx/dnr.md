@@ -14,8 +14,9 @@ This will prevent DeltaMath from using script tags to load the original main.js 
 
 <details>
     <summary>JSON Code</summary>
+    <p>This is an excerpt from rules.json</p>
 
-```json
+```json title="rules.json"
 {
     "id": 1,
     "priority": 1,
@@ -38,8 +39,9 @@ This removes all `Content-Security-Policy` and `X-Frame-Options` headers from al
 
 <details>
     <summary>JSON Code</summary>
+    <p>This is an excerpt from rules.json</p>
 
-  ```json
+  ```json title="rules.json"
 {
     "id": 2,
     "priority": 1,
@@ -79,8 +81,10 @@ Code inside the extension Manifest that runs the rulesets.
 
 <details>
     <summary>JSON Code</summary>
+    <p>This is an excerpt from manifest.json</p>
 
-```json
+```json title="manifest.json"
+
 "permissions": [
     "declarativeNetRequest"
 ],
@@ -106,8 +110,10 @@ Code inside the extension Manifest that runs the rulesets.
 
 <details>
     <summary>Full rules.json</summary>
+    <p>This is real, unmolested code.</p>    
 
-  ```json
+```json title="rules.json"
+
 [
     {
         "id": 1,
@@ -116,7 +122,7 @@ Code inside the extension Manifest that runs the rulesets.
           "type": "block"
         },
         "condition": {
-          "urlFilter": "*://*.deltamath.com/app/main*js",
+          "urlFilter": "*://*deltamath.com/app/main*js",
           "resourceTypes": ["script"]
         }
     },
@@ -151,7 +157,10 @@ Code inside the extension Manifest that runs the rulesets.
         }
     }
     
-]
+  ]
+
 ```
+
+
 
 </details>
